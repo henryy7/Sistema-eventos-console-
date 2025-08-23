@@ -1,0 +1,164 @@
+// Sistema de Eventos em Java - Desenvolvido por Henry Gabriel
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+// Classe Usuário representa uma pessoa que pode se inscrever em eventos
+class Usuario {
+    private String nome;
+    private String email;
+    private List<Evento> eventos;
+
+    public Usuario(String nome, String email) {
+        this.nome = nome;
+        this.email = email;
+        this.eventos = new ArrayList<>();
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void inscreverEvento(Evento evento) {
+        eventos.add(evento);
+    }
+
+    public void listarEventos() {
+        if (eventos.isEmpty()) {
+            System.out.println(nome + " não está inscrito em nenhum evento.");
+        } else {
+            System.out.println("Eventos de " + nome + ":");
+            for (Evento e : eventos) {
+                System.out.println("- " + e.getNome() + " em " + e.getData());
+            }
+        }
+    }
+}
+
+// Classe Evento representa um evento com nome, data e local
+class Evento {
+    private String nome;
+    private String data;
+    private String local;
+
+    public Evento(String nome, String data, String local) {
+        this.nome = nome;
+        this.data = data;
+        this.local = local;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public String getData() {
+        return data;
+    }
+
+    public String getLocal() {
+        return local;
+    }
+}
+
+// Classe principal que contém o menu e o funcionamento do sistema
+public class SistemaEventos {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        List<Usuario> usuarios = new ArrayList<>();
+        List<Evento> eventos = new ArrayList<>();
+        int opcao;
+
+        do {
+            System.out.println("\n===== SISTEMA DE EVENTOS =====");
+            System.out.println("1 - Cadastrar usuário");
+            System.out.println("2 - Cadastrar evento");
+            System.out.println("3 - Inscrever usuário em evento");
+            System.out.println("4 - Listar eventos de um usuário");
+            System.out.println("5 - Listar todos os eventos");
+            System.out.println("0 - Sair");
+            System.out.print("Escolha uma opção: ");
+            opcao = sc.nextInt();
+            sc.nextLine(); // limpar buffer
+
+            switch (opcao) {
+                case 1:
+                    System.out.print("Nome do usuário: ");
+                    String nome = sc.nextLine();
+                    System.out.print("Email do usuário: ");
+                    String email = sc.nextLine();
+                    usuarios.add(new Usuario(nome, email));
+                    System.out.println("Usuário cadastrado com sucesso!");
+                    break;
+
+                case 2:
+                    System.out.print("Nome do evento: ");
+                    String nomeEvento = sc.nextLine();
+                    System.out.print("Data do evento: ");
+                    String data = sc.nextLine();
+                    System.out.print("Local do evento: ");
+                    String local = sc.nextLine();
+                    eventos.add(new Evento(nomeEvento, data, local));
+                    System.out.println("Evento cadastrado com sucesso!");
+                    break;
+
+                case 3:
+                    if (usuarios.isEmpty() || eventos.isEmpty()) {
+                        System.out.println("Cadastre usuários e eventos antes!");
+                        break;
+                    }
+                    System.out.println("Escolha o usuário:");
+                    for (int i = 0; i < usuarios.size(); i++) {
+                        System.out.println(i + " - " + usuarios.get(i).getNome());
+                    }
+                    int idUser = sc.nextInt();
+                    sc.nextLine();
+
+                    System.out.println("Escolha o evento:");
+                    for (int i = 0; i < eventos.size(); i++) {
+                        System.out.println(i + " - " + eventos.get(i).getNome());
+                    }
+                    int idEvento = sc.nextInt();
+                    sc.nextLine();
+
+                    usuarios.get(idUser).inscreverEvento(eventos.get(idEvento));
+                    System.out.println("Inscrição realizada com sucesso!");
+                    break;
+
+                case 4:
+                    if (usuarios.isEmpty()) {
+                        System.out.println("Nenhum usuário cadastrado.");
+                        break;
+                    }
+                    System.out.println("Escolha o usuário:");
+                    for (int i = 0; i < usuarios.size(); i++) {
+                        System.out.println(i + " - " + usuarios.get(i).getNome());
+                    }
+                    int idConsulta = sc.nextInt();
+                    sc.nextLine();
+                    usuarios.get(idConsulta).listarEventos();
+                    break;
+
+                case 5:
+                    if (eventos.isEmpty()) {
+                        System.out.println("Nenhum evento cadastrado.");
+                    } else {
+                        System.out.println("Eventos cadastrados:");
+                        for (Evento e : eventos) {
+                            System.out.println("- " + e.getNome() + " | " + e.getData() + " | " + e.getLocal());
+                        }
+                    }
+                    break;
+
+                case 0:
+                    System.out.println("Saindo do sistema...");
+                    break;
+
+                default:
+                    System.out.println("Opção inválida!");
+            }
+        } while (opcao != 0);
+
+        sc.close();
+    }
+}
